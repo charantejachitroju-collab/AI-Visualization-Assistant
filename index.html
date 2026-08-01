@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DataViz AI — Smart Data Visualization Assistant</title>
+  <meta name="description" content="Transform any data into meaningful visualizations, dashboards, and business insights with AI-powered analytics." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ══════════════════ APP SHELL ══════════════════ -->
+<div class="app-shell" id="app-shell">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect x="2" y="14" width="5" height="12" rx="2" fill="#3B82F6"/>
+            <rect x="9" y="8" width="5" height="18" rx="2" fill="#8B5CF6"/>
+            <rect x="16" y="4" width="5" height="22" rx="2" fill="#EC4899"/>
+            <rect x="23" y="10" width="5" height="16" rx="2" fill="#22C55E"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">DataViz</span>
+          <span class="logo-sub">AI Assistant</span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">Workspace</div>
+      <a class="nav-item active" data-section="upload" href="#" id="nav-upload">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+        <span class="nav-label">Upload Data</span>
+      </a>
+      <a class="nav-item" data-section="url" href="#" id="nav-url">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+        <span class="nav-label">Website URL</span>
+      </a>
+      <a class="nav-item" data-section="dashboard" href="#" id="nav-dashboard">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a class="nav-item" data-section="charts" href="#" id="nav-charts">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+        <span class="nav-label">Charts</span>
+      </a>
+      <a class="nav-item" data-section="insights" href="#" id="nav-insights">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+        <span class="nav-label">AI Insights</span>
+      </a>
+
+      <div class="nav-group-label">Analytics</div>
+      <a class="nav-item" data-section="reports" href="#" id="nav-reports">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+        <span class="nav-label">Reports</span>
+      </a>
+      <a class="nav-item" data-section="history" href="#" id="nav-history">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+        <span class="nav-label">History</span>
+      </a>
+
+      <div class="nav-group-label">Preferences</div>
+      <a class="nav-item" data-section="settings" href="#" id="nav-settings">
+        <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+        <span class="nav-label">Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-version">v2.0 · AI Powered</div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN CONTENT ══ -->
+  <div class="main-area">
+
+    <!-- ══ TOP BAR ══ -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle Sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="topbar-title-wrap">
+          <h1 class="topbar-title">DataViz AI Assistant</h1>
+          <p class="topbar-sub">Transform any data into insight</p>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="live-badge"><span class="live-dot"></span>Live</div>
+        <button class="theme-toggle" id="theme-toggle" title="Toggle Dark / Light Theme">
+          <span class="theme-icon-dark">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </span>
+          <span class="theme-icon-light">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </span>
+        </button>
+        <button class="topbar-btn" id="btn-right-panel" title="Toggle Panel">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ══ WORKSPACE ══ -->
+    <div class="workspace" id="workspace">
+
+      <!-- ── WELCOME / UPLOAD ZONE ── -->
+      <section class="section-page" id="section-upload">
+        <div class="welcome-hero">
+          <div class="welcome-glow"></div>
+          <div class="welcome-badge">✨ AI-Powered Analytics</div>
+          <h2 class="welcome-title">Drop Your Data.<br/>Get Instant Intelligence.</h2>
+          <p class="welcome-sub">Upload any file — CSV, Excel, PDF, Image, Word — or paste a URL.<br/>Our AI auto-detects, cleans, analyzes, and visualizes your data in seconds.</p>
+        </div>
+
+        <!-- Upload Cards -->
+        <div class="upload-cards-row">
+          <div class="upload-card" id="card-csv" tabindex="0">
+            <div class="upload-card-icon-wrap csv">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+            </div>
+            <div class="upload-card-label">CSV / Excel</div>
+            <div class="upload-card-sub">Spreadsheets & tabular data</div>
+            <input type="file" id="csv-input" accept=".csv,.tsv,.xlsx,.xls,.txt" hidden />
+          </div>
+          <div class="upload-card" id="card-pdf" tabindex="0">
+            <div class="upload-card-icon-wrap pdf">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div class="upload-card-label">PDF / Word</div>
+            <div class="upload-card-sub">Reports & documents</div>
+            <input type="file" id="pdf-input" accept=".pdf,.doc,.docx" hidden />
+          </div>
+          <div class="upload-card" id="card-image" tabindex="0">
+            <div class="upload-card-icon-wrap image">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
+            <div class="upload-card-label">Image / Chart</div>
+            <div class="upload-card-sub">Screenshots & chart images</div>
+            <input type="file" id="image-input" accept="image/*" hidden />
+          </div>
+          <div class="upload-card" id="card-url" tabindex="0">
+            <div class="upload-card-icon-wrap url">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </div>
+            <div class="upload-card-label">Website URL</div>
+            <div class="upload-card-sub">Scrape & visualize any page</div>
+          </div>
+        </div>
+
+        <!-- Big Drop Zone -->
+        <div class="big-dropzone" id="big-dropzone">
+          <div class="dropzone-content">
+            <div class="dropzone-big-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <p class="dropzone-big-label">Drag & Drop any file here</p>
+            <p class="dropzone-big-sub">or click to browse your computer</p>
+            <div class="dropzone-formats-list">
+              <span>CSV</span><span>XLSX</span><span>PDF</span><span>DOCX</span><span>PNG</span><span>JPG</span><span>JSON</span><span>TSV</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- URL Input -->
+        <div class="url-input-section" id="url-section" style="display:none;">
+          <div class="url-input-wrap">
+            <svg class="url-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <input type="url" id="url-input" class="url-text-input" placeholder="https://example.com/data-page" />
+            <button class="btn-primary" id="url-load-btn">Analyze URL</button>
+          </div>
+          <p class="url-hint">Paste any public webpage URL to extract and visualize data</p>
+        </div>
+
+        <!-- Upload Status -->
+        <div class="upload-status-bar" id="upload-status-bar" style="display:none;">
+          <div class="status-icon" id="status-icon">⚙️</div>
+          <div class="status-text" id="status-text">Processing…</div>
+          <div class="status-progress"><div class="status-progress-fill" id="status-progress-fill"></div></div>
+        </div>
+
+        <!-- Format Info -->
+        <div class="format-info-grid">
+          <div class="format-info-card">
+            <div class="format-info-icon">📊</div>
+            <strong>Data Files</strong>
+            <p>CSV, TSV, Excel, JSON</p>
+          </div>
+          <div class="format-info-card">
+            <div class="format-info-icon">📑</div>
+            <strong>Documents</strong>
+            <p>PDF, Word, PowerPoint</p>
+          </div>
+          <div class="format-info-card">
+            <div class="format-info-icon">🖼️</div>
+            <strong>Images</strong>
+            <p>PNG, JPG, GIF, WebP</p>
+          </div>
+          <div class="format-info-card">
+            <div class="format-info-icon">🌐</div>
+            <strong>Web</strong>
+            <p>URLs, APIs, Dashboards</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── DASHBOARD AREA (shown after upload) ── -->
+      <section class="section-page" id="dashboard-area" style="display:none;">
+
+        <!-- Dataset Overview Banner -->
+        <div class="dataset-banner" id="dataset-banner">
+          <div class="dataset-banner-left">
+            <div class="dataset-icon" id="dataset-icon">📂</div>
+            <div>
+              <div class="dataset-name" id="dataset-name">Dataset</div>
+              <div class="dataset-meta" id="dataset-meta">Loading…</div>
+            </div>
+          </div>
+          <div class="dataset-banner-right">
+            <button class="btn-outline btn-sm" id="btn-new-upload">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              New Upload
+            </button>
+            <button class="btn-outline btn-sm" id="btn-export-pdf">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export PDF
+            </button>
+            <button class="btn-outline btn-sm" id="btn-export-csv">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Data Quality Report -->
+        <div class="section-block" id="data-quality-block">
+          <div class="section-header">
+            <h2>🔍 Data Quality Report</h2>
+            <span class="section-badge">Auto Cleaned</span>
+          </div>
+          <div class="quality-grid" id="quality-grid"></div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="section-block" id="kpi-block">
+          <div class="section-header">
+            <h2>📌 Key Performance Indicators</h2>
+            <span class="section-badge" id="kpi-count-badge">0 KPIs</span>
+          </div>
+          <div class="kpi-grid" id="kpi-grid"></div>
+        </div>
+
+        <!-- Statistical Summary -->
+        <div class="section-block" id="stats-block">
+          <div class="section-header">
+            <h2>📐 Statistical Summary</h2>
+            <span class="section-badge">Descriptive Analytics</span>
+          </div>
+          <div class="table-scroll">
+            <table class="data-table" id="stats-table">
+              <thead><tr id="stats-table-head"></tr></thead>
+              <tbody id="stats-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="section-block" id="charts-block">
+          <div class="section-header">
+            <h2>📊 Auto-Generated Visualizations</h2>
+            <span class="section-badge" id="charts-count-badge">0 Charts</span>
+          </div>
+          <div class="charts-auto-grid" id="charts-auto-grid"></div>
+        </div>
+
+        <!-- AI Insights -->
+        <div class="section-block" id="insights-block">
+          <div class="section-header">
+            <h2>🧠 AI Insight Engine</h2>
+            <span class="section-badge">Automated Analysis</span>
+          </div>
+          <div class="insights-4grid" id="insights-4grid">
+            <div class="insight-panel insight-what">
+              <div class="insight-panel-label">📋 What Happened?</div>
+              <p id="insight-what">Analyzing…</p>
+            </div>
+            <div class="insight-panel insight-why">
+              <div class="insight-panel-label">🔍 Why Did It Happen?</div>
+              <p id="insight-why">Analyzing…</p>
+            </div>
+            <div class="insight-panel insight-next">
+              <div class="insight-panel-label">🔮 What Comes Next?</div>
+              <p id="insight-next">Analyzing…</p>
+            </div>
+            <div class="insight-panel insight-action">
+              <div class="insight-panel-label">🎯 Recommended Actions</div>
+              <p id="insight-action">Analyzing…</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Preview Table -->
+        <div class="section-block" id="preview-block">
+          <div class="section-header">
+            <h2>📋 Data Preview</h2>
+            <div class="section-header-right">
+              <span class="section-badge" id="preview-rows-badge">20 rows</span>
+              <input type="text" class="search-input" id="table-search" placeholder="Search data…" />
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table class="data-table" id="preview-table">
+              <thead><tr id="preview-table-head"></tr></thead>
+              <tbody id="preview-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ── IMAGE VIEWER ── -->
+      <section class="section-page" id="image-viewer-section" style="display:none;">
+        <div class="viewer-header">
+          <h2>🖼️ Image Viewer</h2>
+          <div class="viewer-header-right">
+            <span class="section-badge" id="img-size-badge">—</span>
+            <button class="btn-outline btn-sm" id="img-close-btn">✕ Close</button>
+          </div>
+        </div>
+        <div class="image-viewer-wrap">
+          <img id="main-image" src="" alt="Uploaded" />
+          <div class="image-meta-bar" id="image-meta-bar"></div>
+        </div>
+      </section>
+
+      <!-- ── PDF VIEWER ── -->
+      <section class="section-page" id="pdf-viewer-section" style="display:none;">
+        <div class="viewer-header">
+          <h2>📄 PDF Viewer</h2>
+          <div class="viewer-header-right">
+            <span class="section-badge" id="pdf-pages-badge">0 pages</span>
+            <button class="btn-outline btn-sm" id="pdf-close-btn">✕ Close</button>
+          </div>
+        </div>
+        <div class="pdf-toolbar">
+          <button class="btn-nav" id="pdf-prev" disabled>← Prev</button>
+          <span class="pdf-page-counter" id="pdf-counter">Page 1 of 1</span>
+          <button class="btn-nav" id="pdf-next" disabled>Next →</button>
+          <select id="pdf-zoom" class="zoom-select">
+            <option value="0.6">60%</option>
+            <option value="0.75">75%</option>
+            <option value="1" selected>100%</option>
+            <option value="1.25">125%</option>
+            <option value="1.5">150%</option>
+            <option value="2">200%</option>
+          </select>
+        </div>
+        <div class="pdf-canvas-wrap">
+          <canvas id="pdf-canvas"></canvas>
+        </div>
+      </section>
+
+      <!-- ── HISTORY ── -->
+      <section class="section-page" id="section-history" style="display:none;">
+        <div class="section-block">
+          <div class="section-header">
+            <h2>🕒 Upload History</h2>
+            <button class="btn-outline btn-sm" id="clear-history-btn">Clear All</button>
+          </div>
+          <div class="history-list" id="history-list">
+            <div class="empty-state">No history yet. Upload a file to get started.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── SETTINGS ── -->
+      <section class="section-page" id="section-settings" style="display:none;">
+        <div class="section-block">
+          <div class="section-header">
+            <h2>⚙️ Settings & Preferences</h2>
+          </div>
+          <div class="settings-grid">
+            <div class="settings-card">
+              <div class="settings-title">🎨 Theme</div>
+              <div class="settings-row">
+                <span>Dark Mode</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="settings-theme-toggle" />
+                  <span class="toggle-knob"></span>
+                </label>
+              </div>
+            </div>
+            <div class="settings-card">
+              <div class="settings-title">📊 Default Chart Type</div>
+              <select class="settings-select" id="settings-default-chart">
+                <option value="auto">Auto Detect</option>
+                <option value="bar">Bar Chart</option>
+                <option value="line">Line Chart</option>
+                <option value="pie">Pie / Donut</option>
+                <option value="scatter">Scatter Plot</option>
+              </select>
+            </div>
+            <div class="settings-card">
+              <div class="settings-title">📋 Preview Rows</div>
+              <select class="settings-select" id="settings-preview-rows">
+                <option value="10">10 rows</option>
+                <option value="20" selected>20 rows</option>
+                <option value="50">50 rows</option>
+                <option value="100">100 rows</option>
+              </select>
+            </div>
+            <div class="settings-card">
+              <div class="settings-title">🔔 Notifications</div>
+              <div class="settings-row">
+                <span>Show Alerts</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="settings-alerts" checked />
+                  <span class="toggle-knob"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── FOOTER ── -->
+      <footer class="app-footer">
+        <div>
+          <strong>DataViz AI Assistant</strong> v2.0 &bull;
+          Built with Chart.js, Papa Parse &amp; PDF.js &bull;
+          <span id="footer-theme-label">Dark Mode</span>
+        </div>
+        <div class="footer-links">
+          <a href="#">Documentation</a>
+          <a href="#">Support</a>
+          <a href="#">Privacy</a>
+        </div>
+      </footer>
+
+    </div><!-- /workspace -->
+  </div><!-- /main-area -->
+
+  <!-- ══ RIGHT PANEL ══ -->
+  <aside class="right-panel" id="right-panel">
+    <div class="right-panel-header">
+      <span>Control Panel</span>
+      <button class="btn-icon-sm" id="right-panel-close">✕</button>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">🎨 Chart Type</div>
+      <select class="panel-select" id="panel-chart-type">
+        <option value="auto">Auto Select</option>
+        <option value="bar">Bar Chart</option>
+        <option value="horizontalBar">Horizontal Bar</option>
+        <option value="line">Line Chart</option>
+        <option value="pie">Pie Chart</option>
+        <option value="doughnut">Donut Chart</option>
+        <option value="scatter">Scatter Plot</option>
+        <option value="bubble">Bubble Chart</option>
+        <option value="area">Area Chart</option>
+        <option value="radar">Radar Chart</option>
+        <option value="polarArea">Polar Area</option>
+      </select>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">🎨 Color Palette</div>
+      <div class="palette-options">
+        <div class="palette-dot active" data-palette="default" style="background:linear-gradient(135deg,#3B82F6,#8B5CF6)"></div>
+        <div class="palette-dot" data-palette="warm" style="background:linear-gradient(135deg,#F59E0B,#EF4444)"></div>
+        <div class="palette-dot" data-palette="cool" style="background:linear-gradient(135deg,#06B6D4,#10B981)"></div>
+        <div class="palette-dot" data-palette="mono" style="background:linear-gradient(135deg,#374151,#9CA3AF)"></div>
+        <div class="palette-dot" data-palette="vivid" style="background:linear-gradient(135deg,#F472B6,#FBBF24)"></div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">🔽 Filters</div>
+      <div id="panel-filters-area">
+        <p class="panel-empty">Upload data to see filters</p>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">⬇️ Export</div>
+      <div class="export-btns">
+        <button class="btn-export-panel" id="exp-pdf">PDF Report</button>
+        <button class="btn-export-panel" id="exp-csv">CSV Data</button>
+        <button class="btn-export-panel" id="exp-png">PNG Charts</button>
+        <button class="btn-export-panel" id="exp-html">HTML Dashboard</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">🤖 AI Recommendations</div>
+      <div class="ai-recs" id="ai-recs-panel">
+        <div class="panel-empty">Upload data to get AI recommendations</div>
+      </div>
+    </div>
+  </aside>
+
+</div><!-- /app-shell -->
+
+<!-- ══ TOAST NOTIFICATIONS ══ -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
